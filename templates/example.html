@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="content">
+  <header>
+    <p>When performing MIP-MLP, one has to select seven choices:</p>
+    <p>A. The taxonomy level used (we propose as a default Genus or Specie).</p>
+    <p>B. The grouping methods (we propose as a default sub-PCA).</p>
+    <p>C. Normalization log or relative (we propose log as a default). If using log, one must put a minimal value
+      (epsilon, we propose epsilon = 0.1).</p>
+    <p>D. Z scoring on either rows or columns or both. This has a limited effect on the results.</p>
+    <p>E. Dimension reduction ICA/PCA or None (we propose as a default none).</p>
+    <p>When choosing dimension reduction in PCA or ICA, one must choose the number of dimensions.</p>
+    <p>F. Normalization Log/Relative (we propose as a default Log).</p>
+    <p>G. Z Scoring following relative frequency No/Yes (we propose as a default No).</p>
+    <p>The output will contains visualizations of the results, as well as a preprocessed file.</p>
+    <p>Here is an example of running:</p>
+    <p>Step 1: Download the example input files and enter each to his fit place:
+    <button>
+    <a href="/download-example-files">download</a>
+    </button>
+    </p>
+    <p>Step 2: Choose the running options like these in the below image:</p>
+    <img src="static/Example_input_options.png" width=40% border="1px">
+    <p>Step 3: Click the "calculate" button and after the run will finish (it could take around 20-40 seconds)
+      the output plots will appear, and you will be able to download them with the "download" button.
+     The output plots should look like this:</p>
+    <p><img src="static/plots_example1.png" style="width:90%"></p>
+    <p><img src="static/plots_example2.png" style="width:90%"></p>
+    <p>Upper left figure is a heatmap of the  correlation between the merged taxonomies.</p>
+    <p>Upper central figure is a heatmap of the  correlation between samples.</p>
+    <p>Upper right figure is a heatmap of the normalized samples.</p>
+    <p>Lower left figure is a histogram of the variance of samples. Samples with very low variance should probably be removed.</p>
+    <p>Lower central figure is a histogram of the total number of reads per sample. Samples with very low total number of reads should probably be removed.</p>
+    <p>Lower right figure only appears when a tag file is given and it represents the correlation between the grouped taxonomies and the tag.</p>
+  </header>
+</section>
+{% endblock %}
