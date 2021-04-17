@@ -1,5 +1,5 @@
 import os
-import service
+from calc_antigens_freqs import call_calc_antigens
 from zipfile import ZipFile
 from os.path import basename
 
@@ -13,91 +13,77 @@ bp = Blueprint('/', __name__, url_prefix='/')
 @bp.route('/Home', methods=('GET', 'POST'))
 def home_page():
     error = None
+
+    hpf_path = "static/hpf_file.csv"
+
+    populations = ['Kavkaz', 'Ashkenazi', 'Ethiopian', 'Sephardi', 'Others', 'Arab',
+                   "General_IL", "AFB", "AINDI", "AISC", "ALANAM", "AMIND", "CARB", "CARHIS",
+                   "CARIBI", "HAWI", "FILII", "KORI", "JAPI", "MSWHIS", "MENAFC", "NAMER", "NCHI",
+                   "SCAHIS", "SCAMB", "SCSEAI", "VIET", "AFA", "API", "CAU", "HIS", "NAM"]
+
     if request.method == 'POST':
-        try:
-            os.remove("static/Correlation_between_each_component_and_the_labelprognosistask.svg")
-        except:
-            print("")
-        finally:
-            pass
-        otu_file = request.files['otu_file']
-        tag_file = request.files['tag_file']
-        taxonomy_level = request.form['taxonomy_level']
-        taxnomy_group = request.form['taxnomy_group']
-        epsilon = request.form['epsilon']
-        z_scoring = request.form['z_scoring']
-        PCA = request.form['PCA']
-        comp = request.form['comp']
-        normalization = request.form['normalization']
-        norm_after_rel = request.form['norm_after_rel']
-        if not otu_file:
-            error = "OTU File should be provided."
-        elif int(comp) == 0:
-            error = "The number of components should be -1 or positive integer (not 0)."
-        else:
-            otu_file.save("OTU.csv")
-            tag_flag = True
-            if tag_file:
-                tag_flag = False
-                tag_file.save("TAG.csv")
-            params = params_dict(taxonomy_level, taxnomy_group, epsilon, z_scoring, PCA, int(comp), normalization,
-                                 norm_after_rel)
+        hpf_file = request.files['hpf_file']
+        pop = request.form['pop']
+        string_input = request.form['string_input']
+
+        input_counter = 0
+
+        if hpf_file:
+            hpf_file.save(hpf_path)
+            input_counter += 1
+        if pop:
+            pop = str(pop)
+            input_counter += 1
+        if string_input:
+            string_input = str(string_input)
+            input_counter += 1
+
+        if input_counter == 0:
+            error = "Some inputs are missing."
+
+        if pop and string_input:
+            call_calc_antigens(pop=pop, string_input=string_input)
+        elif pop:
+            call_calc_antigens(pop=pop)
+        elif string_input:
+            call_calc_antigens(string_input=string_input)
 
 
-            service.evaluate(params, tag_flag)
-
-
-
-            # create a ZipFile object
-            with ZipFile('sampleDir.zip', 'w') as zipObj:
-                # Iterate over all the files in directory
-                for folderName, subfolders, filenames in os.walk("Mucositis"):
-                    for filename in filenames:
-                        # create complete filepath of file in directory
-                        filePath = os.path.join(folderName, filename)
-                        # Add file to zip
-                        zipObj.write(filePath, basename(filePath))
-                for folderName, subfolders, filenames in os.walk("static"):
-                    for filename in filenames:
-                        if not (filename == "example_input_files.zip" or filename == "Example_input_options.png"
-                                or filename == "plots_example1.png" or filename == "plots_example2.png"):
-                            # create complete filepath of file in directory
-                            filePath = os.path.join(folderName, filename)
-                            # Add file to zip
-                            zipObj.write(filePath, basename(filePath))
-
-            images_names = [
-                'static/correlation_heatmap_bacteria.png',
-                'static/correlation_heatmap_patient.png',
-                'static/standard_heatmap.png',
-                'static/samples_variance.svg',
-                'static/density_of_samples.svg'
-
-            ]
-
-            if not tag_flag:
-                images_names.append('static/Correlation_between_each_component_and_the_labelprognosistask.svg')
+            # # create a ZipFile object
+            # with ZipFile('sampleDir.zip', 'w') as zipObj:
+            #     # Iterate over all the files in directory
+            #     for folderName, subfolders, filenames in os.walk("Mucositis"):
+            #         for filename in filenames:
+            #             # create complete filepath of file in directory
+            #             filePath = os.path.join(folderName, filename)
+            #             # Add file to zip
+            #             zipObj.write(filePath, basename(filePath))
+            #     for folderName, subfolders, filenames in os.walk("static"):
+            #         for filename in filenames:
+            #             if not (filename == "example_input_files.zip" or filename == "Example_input_options.png"
+            #                     or filename == "plots_example1.png" or filename == "plots_example2.png"):
+            #                 # create complete filepath of file in directory
+            #                 filePath = os.path.join(folderName, filename)
+            #                 # Add file to zip
+            #                 zipObj.write(filePath, basename(filePath))
 
             try:
-                os.remove("TAG.csv")
+                os.remove(hpf_path)
             except:
                 print("")
             finally:
                 pass
 
         # input validation
-
         flash(error)
         if not error:
-            return render_template('home.html', active='Home', otu_file=otu_file, tag_file=tag_file,
-                                   taxonomy_level=taxonomy_level,
-                                   taxnomy_group=taxnomy_group, epsilon=epsilon, z_scoring=z_scoring, PCA=PCA,
-                                   normalization=normalization,
-                                   norm_after_rel=norm_after_rel,
-                                   images_names=images_names)
+            return render_template('home.html', active='Home', hpf_file=hpf_file, pop=pop, string_input=string_input,
+                                   populations=populations)
 
-    return render_template('home.html', active='Home', taxonomy_level='Specie',
-                           taxnomy_group='Sub-PCA', PCA='None')
+
+
+    return render_template('home.html', active='Home',
+                           populations=populations)  # can add other variables here like args.
 
 
 @bp.route('/Help')
