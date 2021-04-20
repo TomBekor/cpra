@@ -32,7 +32,7 @@ def find_haps_with_antigens(graph, antigens_list):
             hap_with_antigen = graph.adj[antigen]
             for hap in hap_with_antigen:
                 if not hap in dict_haps_with_antigens:
-                    freqs = graph.node[hap]['freq']
+                    freqs = graph.nodes[hap]['freq']
                     dict_haps_with_antigens[hap] = freqs
                     count += freqs[0]
 
@@ -64,4 +64,4 @@ def call_calc_antigens(pop = 'General_IL', string_input = None):
     file_res.close()
 
 
-# call_calc_antigens()
+#call_calc_antigens()
