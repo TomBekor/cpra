@@ -59,38 +59,20 @@
   }
   </style>
 
+<style>
+    table, th, td {
+      border: 1px solid black;
+    }
+</style>
 
-
-  {% if images_names is defined %}
-  <br>
-  <button>
-    <a href="/download-outputs">download</a>
-  </button>
-  <br>
-  <body>
-    <div class="row">
-      <div class="column">
-        <img src="{{ images_names[0] }}" style="width:110%">
-      </div>
-      <div class="column">
-        <img src="{{ images_names[1] }}" style="width:110%">
-      </div>
-      <div class="column">
-        <img src="{{ images_names[2] }}" style="width:110%">
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <img src="{{ images_names[3] }}" style="width:100%">
-      </div>
-      <div class="column">
-        <img src="{{ images_names[4] }}" style="width:100%">
-      </div>
-      <div class="column">
-        <img src="{{ images_names[5] }}" style="width:100%">
-      </div>
-    </div>
-  </body>
+  {% if output_lines is defined %}
+      <br>
+      {{ output_table }}
+      <br>
+      <button>
+        <a href="/download-outputs">download</a>
+      </button>
+      <br>
   {% endif %}
 
 </section>

@@ -7,14 +7,17 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file
 )
 
+from OutputTable import get_output_table
+
 bp = Blueprint('/', __name__, url_prefix='/')
 
+output_path = 'static/output/probs_without_antigens.csv'
 
 @bp.route('/Home', methods=('GET', 'POST'))
 def home_page():
     error = None
 
-    hpf_path = "static/hpf_file.csv"
+    hpf_path = "static/input/hpf_file.csv"
 
     populations = ['Kavkaz', 'Ashkenazi', 'Ethiopian', 'Sephardi', 'Others', 'Arab',
                    "General_IL", "AFB", "AINDI", "AISC", "ALANAM", "AMIND", "CARB", "CARHIS",
@@ -48,37 +51,29 @@ def home_page():
         elif string_input:
             call_calc_antigens(string_input=string_input)
 
+        if os.path.exists(output_path):
+            with open(output_path, 'r') as output_file:
+                output_lines = output_file.readlines()
 
-            # # create a ZipFile object
-            # with ZipFile('sampleDir.zip', 'w') as zipObj:
-            #     # Iterate over all the files in directory
-            #     for folderName, subfolders, filenames in os.walk("Mucositis"):
-            #         for filename in filenames:
-            #             # create complete filepath of file in directory
-            #             filePath = os.path.join(folderName, filename)
-            #             # Add file to zip
-            #             zipObj.write(filePath, basename(filePath))
-            #     for folderName, subfolders, filenames in os.walk("static"):
-            #         for filename in filenames:
-            #             if not (filename == "example_input_files.zip" or filename == "Example_input_options.png"
-            #                     or filename == "plots_example1.png" or filename == "plots_example2.png"):
-            #                 # create complete filepath of file in directory
-            #                 filePath = os.path.join(folderName, filename)
-            #                 # Add file to zip
-            #                 zipObj.write(filePath, basename(filePath))
+        output_pairs = []
+        for i in range(1, len(output_lines), 1):
+            output_line = output_lines[i].split(',')
+            output_pairs.append((output_line[0], output_line[1]))
 
-            try:
-                os.remove(hpf_path)
-            except:
-                print("")
-            finally:
-                pass
+        output_table = get_output_table(output_pairs)
+
+        try:
+            os.remove(hpf_path)
+        except:
+            print("")
+        finally:
+            pass
 
         # input validation
         flash(error)
         if not error:
             return render_template('home.html', active='Home', hpf_file=hpf_file, pop=pop, string_input=string_input,
-                                   populations=populations)
+                                   populations=populations, output_lines=output_lines, output_table=output_table)
 
 
 
@@ -103,12 +98,12 @@ def about_page():
 
 @bp.route('/download-outputs')
 def download():
-    return send_file("sampleDir.zip", mimetype='zip', as_attachment=True, )
+    return send_file(output_path, mimetype='csv', as_attachment=True, )
 
 
 @bp.route('/download-example-files')
 def download_example():
-    return send_file("static/example_input_files.zip", mimetype='zip', as_attachment=True, )
+    return send_file("static/example/input_exaple_1.csv", mimetype='csv', as_attachment=True, )
 
 
 def params_dict(taxonomy_level, taxnomy_group, epsilon, z_scoring, pca, comp, normalization, norm_after_rel):

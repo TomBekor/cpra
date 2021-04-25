@@ -3,13 +3,14 @@ import os
 import timeit
 
 def parse_input():
-    path = 'input'
+    path = 'static/input'
     loci_list = ['A', 'B', 'C', 'DQB1', 'DRB1']
     folder = os.fsencode(path)
 
     dict_donors = {}
     for file in os.listdir(folder):
         filename = os.fsdecode(file)
+        print(file)
         if filename.endswith(('.csv')):
             list_donor = []
             with open(path + '/' + filename) as input_file:
@@ -42,7 +43,7 @@ def call_calc_antigens(pop = 'General_IL', string_input = None):
     #get fom the user
     graph = pickle.load(open('pkl/graph_haps_freqs_'+ pop + '.pkl', "rb"))
     #antigens_file = 'Input/antigens.txt'
-    file_res = open('output/probs_without_antigens.csv', 'w')
+    file_res = open('static/output/probs_without_antigens.csv', 'w+')
     if string_input:
         dict_donors = {}
         string_input = string_input.strip().split(';')
@@ -51,7 +52,7 @@ def call_calc_antigens(pop = 'General_IL', string_input = None):
         dict_donors = parse_input()
     #with open(antigens_file) as file_input:
         #for line in file_input:
-    file_res.write("Sample id,Frequency of haplotypes without positive antigens\n")
+    file_res.write("Sample id, Frequency of haplotypes without positive antigens:\n")
     for sample_id, antigens_list in dict_donors.items():
 
             #id, antigens_list = line.strip().split(',')
@@ -64,4 +65,4 @@ def call_calc_antigens(pop = 'General_IL', string_input = None):
     file_res.close()
 
 
-#call_calc_antigens()
+call_calc_antigens()

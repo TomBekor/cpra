@@ -3,11 +3,14 @@
 {% block content %}
     <section class="content">
       <header>
-        <p>MIP-MLP is preprocessing tool for 16S values.</p>
-        <p>The input file should contain detailed unormalized OTU/Feature values, and the appopriate taxonomy as a csv file,</p>
-        <p>and a possible tag file, with the class of each sample. See Example page for the formal of the input files. Note that the OTU file should have a taxonomy column in it.</p>
-        <p>The tag file is not used for the preprocessing, but is used to provide some statistics on the relation between the features and the class.</p>
-        <p>One can run MIP-MLP even without a tag file.</p>
+        <p>CPRA calculates the frequency of haplotypes without the given antigens in the wanted population.</p>
+        <p>The antigens input should be in one of the following formats -</p>
+          <p>1. CSV files with 3 first fields: Sample ID, Antigen, Assignment. Sample ID antigens can be divided into 2 or more files.<br>
+                Assignment - ‘Positive’ or ‘Negative’ antigen(the negative antigens are optional, and may be ignored).<br>
+                Can add files of more than one person at a time.</p>
+          <p>2. Input string(field- Patient positive antigens): id; list of positive antigens separated by ','.</p>
+          <p>In both formats, the antigens are in 4-digit format.</p>
+          <p>In addition, select the desired population from the list.</p>
       </header>
     </section>
 {% endblock %}
