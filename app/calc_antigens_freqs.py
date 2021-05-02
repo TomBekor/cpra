@@ -5,6 +5,7 @@ import timeit
 def parse_input():
     path = 'static/input'
     loci_list = ['A', 'B', 'C', 'DQB1', 'DRB1']
+    os.makedirs(path, exist_ok=True)
     folder = os.fsencode(path)
 
     dict_donors = {}
