@@ -15,7 +15,7 @@ def parse_input():
         if filename.endswith(('.csv')):
             list_donor = []
             with open(path + '/' + filename) as input_file:
-                for line in input_file:
+                for line in input_file.readlines():
                     sample_id, antigen, assignment = line.strip().split(',')[:3]
                     if assignment == 'Positive':
                         if antigen.split('*')[0] in loci_list:
@@ -66,4 +66,4 @@ def call_calc_antigens(pop = 'General_IL', string_input = None):
     file_res.close()
 
 
-call_calc_antigens()
+# call_calc_antigens()

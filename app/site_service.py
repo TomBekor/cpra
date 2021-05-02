@@ -2,6 +2,7 @@ import os
 from calc_antigens_freqs import call_calc_antigens
 from zipfile import ZipFile
 from os.path import basename
+import shutil
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file
@@ -17,7 +18,8 @@ output_path = 'static/output/probs_without_antigens.csv'
 def home_page():
     error = None
 
-    hpf_path = "static/input/hpf_file.csv"
+    hpf_path = "static/input/"
+    os.makedirs(hpf_path, exist_ok=True)
 
     populations = ['Kavkaz', 'Ashkenazi', 'Ethiopian', 'Sephardi', 'Others', 'Arab',
                    "General_IL", "AFB", "AINDI", "AISC", "ALANAM", "AMIND", "CARB", "CARHIS",
@@ -25,22 +27,22 @@ def home_page():
                    "SCAHIS", "SCAMB", "SCSEAI", "VIET", "AFA", "API", "CAU", "HIS", "NAM"]
 
     if request.method == 'POST':
-        hpf_file = request.files['hpf_file']
+        hpf_files = request.files.getlist('hpf_files')
         pop = request.form['pop']
         string_input = request.form['string_input']
 
         input_counter = 0
 
-        if hpf_file:
-            hpf_file.save(hpf_path)
-            input_counter += 1
+        if not hpf_files[0].filename == '':
+            for i, hpf_file in enumerate(hpf_files):
+                hpf_file.save(hpf_path + 'hpf_file' + str(i) + '.csv')
+                input_counter += 1
         if pop:
             pop = str(pop)
             input_counter += 1
         if string_input:
             string_input = str(string_input)
             input_counter += 1
-
         if input_counter == 0:
             error = "Some inputs are missing."
 
@@ -63,7 +65,7 @@ def home_page():
         output_table = get_output_table(output_pairs)
 
         try:
-            os.remove(hpf_path)
+            shutil.rmtree(hpf_path)
         except:
             print("")
         finally:
@@ -72,7 +74,7 @@ def home_page():
         # input validation
         flash(error)
         if not error:
-            return render_template('home.html', active='Home', hpf_file=hpf_file, pop=pop, string_input=string_input,
+            return render_template('home.html', active='Home', hpf_files=hpf_files, pop=pop, string_input=string_input,
                                    populations=populations, output_lines=output_lines, output_table=output_table)
 
 
