@@ -4,3 +4,5 @@ venv
 /sampleDir.zip
 .DS_Store
 pkl/
+app/.idea/
+app/__pycache__/
