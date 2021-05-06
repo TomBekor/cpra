@@ -82,14 +82,33 @@
     }
 </style>
 
+{% macro table_row(row) -%}
+    <tr>
+    {% for item in row %}
+        <th>{{ item }}</th>
+    {% endfor %}
+    </tr>
+{%- endmacro %}
+
+
   {% if output_lines is defined %}
-      <div class="output">
+      <div>
+          <br>
+            <div class="output">
+                <button class="btn download-button">
+                    <a class="download-link" href="/download-outputs">download</a>
+                </button>
+            </div>
       <br>
-      {{ output_table }}
-      <br>
-      <button class="btn download-button">
-        <a class="download-link" href="/download-outputs">download</a>
-      </button>
+          <table class="output">
+          <tr>
+            <th>Sample id</th>
+            <th>Frequency of haplotypes without positive antigens</th>
+          </tr>
+            {% for row in output_table %}
+                {{ table_row(row) }}
+            {% endfor %}
+          </table>
       <br>
       </div>
   {% endif %}

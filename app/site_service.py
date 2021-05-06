@@ -8,8 +8,6 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file
 )
 
-from OutputTable import get_output_table
-
 bp = Blueprint('/', __name__, url_prefix='/')
 
 output_path = 'static/output/probs_without_antigens.csv'
@@ -60,9 +58,10 @@ def home_page():
         output_pairs = []
         for i in range(1, len(output_lines), 1):
             output_line = output_lines[i].split(',')
-            output_pairs.append((output_line[0], output_line[1]))
+            output_pairs.append([item.rstrip() for item in output_line])
 
-        output_table = get_output_table(output_pairs)
+        print(output_pairs)
+        output_table = output_pairs
 
         try:
             shutil.rmtree(hpf_path)
