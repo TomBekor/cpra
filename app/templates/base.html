@@ -1,5 +1,14 @@
 <!doctype html>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z8MJKC3L7C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Z8MJKC3L7C');
+</script>
 <nav>
     <style>
 ul {
@@ -31,6 +40,82 @@ li a {
 li a:hover:not(.active) {
   background-color: #5E84FF;
   color: #000000;
+}
+
+body {
+    background-color: #F2F2F2;
+    font-family: "Lucida Sans Unicode", sans-serif;
+}
+
+.h1_title {
+    text-align:center;
+    font-size: 35px;
+    color: #115676;
+    font-weight: bold;
+}
+
+.central_box {
+    background-color: #CFE0E9;
+    width: 90%;
+    margin:0 auto;
+    height:100%;
+    border-radius: 8px;
+    padding: 5% 15%;
+    {#align-content: center;#}
+    {#align-items: center;#}
+    text-align: left;
+}
+
+.site_form {
+    margin: auto;
+    width: 400px;
+    {#background-color: #A0FAB2;#}
+}
+
+.site_input {
+    font-size: 18px;
+    color: #000000;
+}
+
+.btn {
+    color: #FFFFFF;
+    border-radius: 4px;
+}
+
+.submit_btn {
+    padding: 0.5% 7%;
+    font-size: 18px;
+    background-color: #5E84FF;
+}
+
+.download-button {
+    padding: 6px 6px;
+    font-size: 16px;
+    background-color: #CFE0E9;
+    border-radius: 2px;
+    border-color: white;
+}
+
+.download-link {
+    color: #000000;
+}
+
+.site_center {
+    text-align: center;
+}
+
+.produced_text {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.big_text {
+    padding-left: 20px;
+}
+
+.output {
+    text-align: center;
 }
 
 .active {
