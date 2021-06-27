@@ -57,6 +57,7 @@ def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
     else:
         graph = pickle.load(open('pkl/graph_haps_freqs_' + pop + '.pkl', "rb"))
     # antigens_file = 'Input/antigens.txt'
+    os.makedirs('static/output/', exist_ok=True)
     file_res = open('static/output/probs_without_antigens_haps.csv', 'w+')
     if string_input:
         dict_donors = {}
