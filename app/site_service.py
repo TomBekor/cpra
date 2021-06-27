@@ -25,7 +25,7 @@ def home_page():
     #                "CARIBI", "HAWI", "FILII", "KORI", "JAPI", "MSWHIS", "MENAFC", "NAMER", "NCHI",
     #                "SCAHIS", "SCAMB", "SCSEAI", "VIET", "AFA", "API", "CAU", "HIS", "NAM"]
 
-    population_asumme_hwe = [
+    population_not_asumme = [
         'General_IL',
         'Ashkenazi',
         'Asian',
@@ -34,7 +34,7 @@ def home_page():
         'Sephardi',
     ]
 
-    population_not_asumme = [
+    population_asumme_hwe = [
         'General_IL',
         'Ashkenazi',
         'Asian',
