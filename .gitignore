@@ -6,3 +6,4 @@ venv
 app/.idea/
 app/__pycache__/
 app/pkl/
+app/static/output/*

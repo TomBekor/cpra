@@ -25,16 +25,33 @@
 
     <div class="site_form">
     <div class="site_input">
-      <label for="hpf_files">Select HPF file:</label>
+      <label for="hpf_files">Select files:</label>
       <input type=file id="hpf_files" name="hpf_files" multiple>
     </div>
 
-    <br>
+    <p id=Asumme_flag></p>
 
-    <div class="site_input center">
-        <label for="pop">Population:</label>
-        <select name="pop" id="pop">
-            {% for population in populations %}
+    <p>
+    <label class="switch">
+      <input id="Asumme_HWE" name="Asumme_HWE" type="checkbox" onclick="change_population()">
+      <span class="slider round"></span>
+    </label>
+        Asumme HWE
+    </p>
+
+    <div class="site_input center" id="population_asumme_hwe_div">
+        <label for="population_asumme_hwe" id="population_asumme_hwe_label">Population:</label>
+        <select name="population_asumme_hwe" id="population_asumme_hwe">
+            {% for population in population_asumme_hwe %}
+                {{ build_option(population, pop) }}
+            {% endfor %}
+      </select>
+    </div>
+
+    <div class="site_input center" id="population_not_asumme_div">
+        <label for="population_not_asumme" id="population_not_asumme_label">Population:</label>
+        <select name="population_not_asumme" id="population_not_asumme">
+            {% for population in population_not_asumme %}
                 {{ build_option(population, pop) }}
             {% endfor %}
       </select>
@@ -102,8 +119,10 @@
       <br>
           <table class="output">
           <tr>
-            <th>Sample id</th>
-            <th>Frequency of haplotypes without positive antigens</th>
+              <th>Sample id</th>
+              <th>Class 1+2</th>
+              <th>Class 1</th>
+              <th>Class 2</th>
           </tr>
             {% for row in output_table %}
                 {{ table_row(row) }}
@@ -112,6 +131,52 @@
       <br>
       </div>
   {% endif %}
+
+<script>
+function change_population() {
+  var checkBox = document.getElementById("Asumme_HWE");
+  var population_asumme_hwe = document.getElementById("population_asumme_hwe");
+  var population_asumme_hwe_label = document.getElementById("population_asumme_hwe_label");
+  var population_asumme_hwe_div = document.getElementById("population_asumme_hwe_div");
+  var population_not_asumme = document.getElementById("population_not_asumme");
+  var population_not_asumme_label = document.getElementById("population_not_asumme_label");
+  var population_not_asumme_div = document.getElementById("population_not_asumme_div");
+  if (checkBox.checked === true){
+      {#population_asumme_hwe.style.display = "block";#}
+      {#population_asumme_hwe_label.style.display = "block";#}
+      population_asumme_hwe_div.style.display = "block";
+      {#population_not_asumme.style.display = "none";#}
+      {#population_not_asumme_label.style.display = "none";#}
+      population_not_asumme_div.style.display = "none";
+  } else {
+      {#population_asumme_hwe.style.display = "none";#}
+      {#population_asumme_hwe_label.style.display = "none";#}
+      population_asumme_hwe_div.style.display = "none";
+      {#population_not_asumme.style.display = "block";#}
+      {#population_not_asumme_label.style.display = "block";#}
+      population_not_asumme_div.style.display = "block";
+  }
+}
+</script>
+
+<script>
+    function population_checkbox_state(state) {
+        var checkBox = document.getElementById("Asumme_HWE");
+        checkBox.checked = state
+    }
+</script>
+
+{% if asumme_HWE %}
+    <script>
+        population_checkbox_state(true);
+        change_population();
+    </script>
+{% else %}
+    <script>
+        population_checkbox_state(false);
+        change_population();
+    </script>
+{% endif %}
 
 </section>
 

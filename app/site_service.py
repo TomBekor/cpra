@@ -10,7 +10,8 @@ from flask import (
 
 bp = Blueprint('/', __name__, url_prefix='/')
 
-output_path = 'static/output/probs_without_antigens.csv'
+output_path = 'static/output/probs_without_antigens_haps.csv'
+
 
 @bp.route('/Home', methods=('GET', 'POST'))
 def home_page():
@@ -19,15 +20,73 @@ def home_page():
     hpf_path = "static/input/"
     os.makedirs(hpf_path, exist_ok=True)
 
-    populations = ['Kavkaz', 'Ashkenazi', 'Ethiopian', 'Sephardi', 'Others', 'Arab',
-                   "General_IL", "AFB", "AINDI", "AISC", "ALANAM", "AMIND", "CARB", "CARHIS",
-                   "CARIBI", "HAWI", "FILII", "KORI", "JAPI", "MSWHIS", "MENAFC", "NAMER", "NCHI",
-                   "SCAHIS", "SCAMB", "SCSEAI", "VIET", "AFA", "API", "CAU", "HIS", "NAM"]
+    # populations = ['Kavkaz', 'Ashkenazi', 'Ethiopian', 'Sephardi', 'Others', 'Arab',
+    #                "General_IL", "AFB", "AINDI", "AISC", "ALANAM", "AMIND", "CARB", "CARHIS",
+    #                "CARIBI", "HAWI", "FILII", "KORI", "JAPI", "MSWHIS", "MENAFC", "NAMER", "NCHI",
+    #                "SCAHIS", "SCAMB", "SCSEAI", "VIET", "AFA", "API", "CAU", "HIS", "NAM"]
+
+    population_asumme_hwe = [
+        'General_IL',
+        'Ashkenazi',
+        'Asian',
+        'Ethiopia',
+        'Others',
+        'Sephardi',
+    ]
+
+    population_not_asumme = [
+        'General_IL',
+        'Ashkenazi',
+        'Asian',
+        'Ethiopian',
+        'Others',
+        'Sephardi',
+        'AFA',
+        'AFB',
+        'AINDI',
+        'AISC',
+        'ALANAM',
+        'AMIND',
+        'API',
+        'CARB',
+        'CARHIS',
+        'CARIBI',
+        'CAU',
+        'FILII',
+        'HAWI',
+        'HIS',
+        'JAPI',
+        'KORI',
+        'MENAFC',
+        'MSWHIS',
+        'NAM',
+        'NAMER',
+        'NCHI',
+        'SCAHIS',
+        'SCAMB',
+        'SCSEAI',
+        'VIET'
+    ]
+
+    populations = []
+
+    asumme_HWE_form = True
 
     if request.method == 'POST':
         hpf_files = request.files.getlist('hpf_files')
-        pop = request.form['pop']
+        asumme_HWE_form = request.form.get('Asumme_HWE')
+        population_asumme_hwe_form = request.form['population_asumme_hwe']
+        population_not_asumme_form = request.form['population_not_asumme']
         string_input = request.form['string_input']
+
+        if asumme_HWE_form:
+            pop = population_asumme_hwe_form
+            asumme_HWE_form = True
+        else:
+            pop = population_not_asumme_form
+            asumme_HWE_form = False
+
+        print(asumme_HWE_form)
 
         input_counter = 0
 
@@ -45,11 +104,11 @@ def home_page():
             error = "Some inputs are missing."
 
         if pop and string_input:
-            call_calc_antigens(pop=pop, string_input=string_input)
+            call_calc_antigens(pop=pop, string_input=string_input, Assume_HWE=asumme_HWE_form)
         elif pop:
-            call_calc_antigens(pop=pop)
+            call_calc_antigens(pop=pop, Assume_HWE=asumme_HWE_form)
         elif string_input:
-            call_calc_antigens(string_input=string_input)
+            call_calc_antigens(string_input=string_input, Assume_HWE=asumme_HWE_form)
 
         if os.path.exists(output_path):
             with open(output_path, 'r') as output_file:
@@ -74,12 +133,15 @@ def home_page():
         flash(error)
         if not error:
             return render_template('home.html', active='Home', hpf_files=hpf_files, pop=pop, string_input=string_input,
-                                   populations=populations, output_lines=output_lines, output_table=output_table)
-
-
+                                   populations=populations, output_lines=output_lines, output_table=output_table,
+                                   asumme_HWE=asumme_HWE_form,
+                                   population_asumme_hwe=population_asumme_hwe,
+                                   population_not_asumme=population_not_asumme)
 
     return render_template('home.html', active='Home',
-                           populations=populations)  # can add other variables here like args.
+                           populations=populations, asumme_HWE=asumme_HWE_form,
+                           population_asumme_hwe=population_asumme_hwe,
+                           population_not_asumme=population_not_asumme)  # can add other variables here like args.
 
 
 @bp.route('/Help')

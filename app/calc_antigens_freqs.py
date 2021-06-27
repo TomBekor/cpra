@@ -66,7 +66,7 @@ def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
         dict_donors = parse_input()
     # with open(antigens_file) as file_input:
     # for line in file_input:
-    file_res.write("Sample id,Class 1+2,Class 1,Class 2,Frequency of haplotypes with positive antigens\n")
+    file_res.write("Sample id,Class 1+2,Class 1,Class 2\n")
     for sample_id, antigens_list in dict_donors.items():
 
         # id, antigens_list = line.strip().split(',')
@@ -86,4 +86,4 @@ def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
 
     file_res.close()
 
-# call_calc_antigens()
+call_calc_antigens()
