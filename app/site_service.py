@@ -29,7 +29,7 @@ def home_page():
         'General_IL',
         'Ashkenazi',
         'Asian',
-        'Ethiopia',
+        'Ethiopian',
         'Others',
         'Sephardi',
     ]

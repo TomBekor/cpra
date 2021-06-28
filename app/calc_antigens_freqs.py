@@ -52,7 +52,7 @@ def find_haps_with_antigens(graph, antigens_list):
 
 def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
     # get fom the user
-    if Assume_HWE:
+    if not Assume_HWE:
         graph = pickle.load(open('pkl/graph_muugs_freqs_' + pop + '.pkl', "rb"))
     else:
         graph = pickle.load(open('pkl/graph_haps_freqs_' + pop + '.pkl', "rb"))
