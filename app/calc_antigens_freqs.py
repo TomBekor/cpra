@@ -74,7 +74,7 @@ def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
         # freq_missing = find_haps_with_antigens(graph, antigens_list.split(';'))
         freq_positive_all, freq_positive_class1, freq_positive_class2, num_from_class1, num_from_class2 = \
             find_haps_with_antigens(graph, antigens_list)
-        if not Assume_HWE:
+        if Assume_HWE:
             freq_positive_all = 1 - (1 - freq_positive_all) ** 2
             freq_positive_class1 = 1 - (1 - freq_positive_class1) ** 2
             freq_positive_class2 = 1 - (1 - freq_positive_class2) ** 2
