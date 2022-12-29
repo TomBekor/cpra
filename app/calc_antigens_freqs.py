@@ -12,17 +12,19 @@ def parse_input():
     dict_donors = {}
     for file in os.listdir(folder):
         filename = os.fsdecode(file)
-        print(file)
         if filename.endswith(('.csv')):
-            list_donor = []
             with open(path + '/' + filename) as input_file:
                 for line in input_file.readlines():
+                    if "Antigen" in line:
+                        continue
+                    #sample_id, antigen, assignment, strength = line.strip().split(',')[:4]
                     sample_id, antigen, assignment = line.strip().split(',')[:3]
+                    if sample_id not in dict_donors:
+                        dict_donors[sample_id] = []
                     if assignment == 'Positive':
+                    #if float(strength) >= threshold:
                         if antigen.split('*')[0] in loci_list:
-                            list_donor.append(antigen)
-            if list_donor:
-                dict_donors[sample_id] = dict_donors.get(sample_id, []) + list_donor
+                            dict_donors[sample_id].append(antigen)
 
     return dict_donors
 
@@ -87,4 +89,6 @@ def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
 
     file_res.close()
 
-call_calc_antigens()
+
+
+call_calc_antigens(Assume_HWE=True)
