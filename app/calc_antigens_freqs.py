@@ -3,7 +3,7 @@ import os
 import timeit
 
 
-def parse_input():
+def parse_input(threshold):
     path = 'static/input'
     loci_list = ['A', 'B', 'C', 'DQB1', 'DRB1']
     os.makedirs(path, exist_ok=True)
@@ -17,12 +17,12 @@ def parse_input():
                 for line in input_file.readlines():
                     if "Antigen" in line:
                         continue
-                    #sample_id, antigen, assignment, strength = line.strip().split(',')[:4]
-                    sample_id, antigen, assignment = line.strip().split(',')[:3]
+                    sample_id, antigen, assignment, strength = line.strip().split(',')[:4]
+                    #sample_id, antigen, assignment = line.strip().split(',')[:3]
                     if sample_id not in dict_donors:
                         dict_donors[sample_id] = []
-                    if assignment == 'Positive':
-                    #if float(strength) >= threshold:
+                    #if assignment == 'Positive':
+                    if float(strength) >= threshold:
                         if antigen.split('*')[0] in loci_list:
                             dict_donors[sample_id].append(antigen)
 
@@ -52,7 +52,7 @@ def find_haps_with_antigens(graph, antigens_list):
            len(dict_haps_with_antigens_class2)
 
 
-def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
+def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False, threshold = 4000):
     # get fom the user
     if not Assume_HWE:
         graph = pickle.load(open('pkl/graph_muugs_freqs_' + pop + '.pkl', "rb"))
@@ -66,7 +66,7 @@ def call_calc_antigens(pop='General_IL', string_input=None, Assume_HWE=False):
         string_input = string_input.strip().split(';')
         dict_donors[string_input[0]] = string_input[1].split(',')
     else:
-        dict_donors = parse_input()
+        dict_donors = parse_input(threshold)
     # with open(antigens_file) as file_input:
     # for line in file_input:
     file_res.write("Sample id,Class 1+2,Class 1,Class 2\n")
